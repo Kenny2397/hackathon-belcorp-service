@@ -3,7 +3,7 @@ name: Serverless Framework CI/CD
 on:
   push:
     branches:
-      - master # Deploy on push to the main branch
+      - main # Deploy on push to the main branch
 
 jobs:
   deploy:
@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20.17.0" # Use Node.js version suitable for your project
+          node-version: "18" # Use Node.js version suitable for your project
 
       - name: Install Serverless Framework
         run: npm install -g serverless
@@ -26,15 +26,16 @@ jobs:
         run: npm install
 
       - name: Configure AWS Credentials
+        run: |
+          echo "Configuring AWS credentials..."
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }} # Optional: if using temporary session token
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }} # Optional: only if using session tokens
 
       - name: Deploy with Serverless
-        run: serverless deploy --stage pr --region us-west-2 --param="openai-api-key=${{ secrets.OPENAI_API_KEY }}"
+        run: serverless deploy --stage prod --param="token=${{ secrets.DEPLOY_ENV_PARAMS }}"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }} # Optional
-
