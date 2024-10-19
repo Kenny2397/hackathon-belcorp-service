@@ -85,37 +85,37 @@ functions:
     handler: src/functions/product-recomendation.handler
     description: Get recomendations of products
     timeout: 30
-    cors: true
     memorySize: 512
     events:
       - http:
           method: POST
           path: /user/product-recomendation
           integration: lambda
+          cors: true
           response: ${self:custom.responseGetters}
   getClients:
     handler: src/functions/getClients.handler
     description: Get clients
     timeout: 30
-    cors: true
     memorySize: 512
     events:
       - http:
           method: GET
           path: /clients
           integration: lambda
+          cors: true
           response: ${self:custom.responseGetters}
   getClient:
     handler: src/functions/getClient.handler
     description: Get client by code
     timeout: 30
-    cors: true
     memorySize: 512
     events:
       - http:
           method: GET
           path: /clients/{code}
           integration: lambda
+          cors: true
           response: ${self:custom.responseGetters}
 
 resources:
