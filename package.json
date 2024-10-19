@@ -1,7 +1,7 @@
 {
-  "name": "social-network-app",
+  "name": "user-recomendation-service",
   "version": "1.0.0",
-  "description": "Social network application using STD",
+  "description": "user-recomendation-service",
   "scripts": {
     "dev": "serverless offline start --stage dev --region us-east-1",
     "pkg": "serverless package --stage dev --region us-east-1",
