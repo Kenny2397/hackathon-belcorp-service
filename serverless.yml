@@ -28,13 +28,14 @@ provider:
     # POWERTOOLS_TRACE_ENABLED: "false"
 
     USER_RECORD_INTERACTION: ${opt:stage}-user-record-interaction
+    OPENAI_API_KEY: ${param:openai-api-key}
 
 package:
   individually: true
   excludeDevDependencies: true
 
 custom:
-  defaultRegion: "us-east-1"
+  defaultRegion: "us-west-2"
   esbuild:
     bundle: true
     minify: true
@@ -77,21 +78,21 @@ plugins:
   - serverless-offline
 
 functions:
-  getAllPostOfUser:
-    handler: src/functions/getAllPostOfUser.handler
-    description: Get all post of user
+  product-recomendation:
+    handler: src/functions/product-recomendation.handler
+    description: Get recomendations of products
     timeout: 30
     memorySize: 512
     events:
       - http:
-          method: GET
-          path: /post/user/{username}
+          method: POST
+          path: /user/product-recomendation
           integration: lambda
           response: ${self:custom.responseGetters}
 
 resources:
   Resources:
-    socialNetworkDB:
+    UserRecordInteractionDB:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:provider.environment.USER_RECORD_INTERACTION}

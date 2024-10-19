@@ -1,7 +1,7 @@
 {
   "preset": "ts-jest",
   "testEnvironment": "node",
-  "displayName": "serverless-ts-skeleton",
+  "displayName": "user-recomendation-service",
   "roots": [
     "<rootDir>"
   ],

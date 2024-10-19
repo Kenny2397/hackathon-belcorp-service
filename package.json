@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "user-recomendation-service",
   "scripts": {
-    "dev": "serverless offline start --stage dev --region us-east-1",
-    "pkg": "serverless package --stage dev --region us-east-1",
-    "deploy": "serverless deploy --stage pr --region us-west-2",
+    "dev": "serverless offline start --stage dev --region us-west-2",
+    "pkg": "serverless package --stage dev --region us-west-2",
+    "deploy": "serverless deploy --stage pr --region us-west-2 --param=openai-api-key=",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "test": "jest --ci --detectOpenHandles --config=jest.config.json --passWithNoTests",
@@ -31,9 +31,9 @@
     "husky": "9.0.11",
     "jest": "29.7.0",
     "serverless": "3.38.0",
-    "serverless-prune-plugin": "2.0.2",
     "serverless-esbuild": "1.51.0",
     "serverless-offline": "13.3.3",
+    "serverless-prune-plugin": "2.0.2",
     "ts-jest": "29.1.2",
     "typescript": "5.4.2"
   },
@@ -43,7 +43,11 @@
     "@aws-lambda-powertools/tracer": "^2.8.0",
     "@aws-sdk/client-dynamodb": "^3.654.0",
     "@aws-sdk/util-dynamodb": "^3.654.0",
+    "@langchain/community": "^0.3.6",
+    "@langchain/core": "^0.3.13",
+    "@langchain/openai": "^0.3.11",
     "@smithy/node-http-handler": "^3.2.2",
+    "langchain": "^0.3.2",
     "ulid": "^2.3.0",
     "zod": "~3"
   }
