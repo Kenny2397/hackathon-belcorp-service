@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20" # Use Node.js version suitable for your project
+          node-version: "20" # Use Node.js version suitable for your project
 
       - name: Install Serverless Framework
         run: npm install -g serverless
@@ -34,7 +35,7 @@ jobs:
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }} # Optional: only if using session tokens
 
       - name: Deploy with Serverless
-        run: serverless deploy --stage prod --param="token=${{ secrets.DEPLOY_ENV_PARAMS }}"
+        run: serverless deploy --stage prod --region us-west-2 --param="token=${{ secrets.DEPLOY_ENV_PARAMS }}"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
