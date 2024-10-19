@@ -19,7 +19,7 @@ export class GenerateError extends Error {
   name: 'Error'
   public statusCode: number
   public body: Record<string, any> | string
-  
+
   constructor (statusCode: number, body: object) {
     super()
     this.statusCode = statusCode
@@ -28,7 +28,7 @@ export class GenerateError extends Error {
 }
 
 export const responseHandler = (statusCode: number, body?: any, error?: any) => {
-  
+
 
   const listStatus: Record<number, string> = {
     200: 'OK',

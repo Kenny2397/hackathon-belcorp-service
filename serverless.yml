@@ -20,6 +20,7 @@ provider:
         - "dynamodb:DeleteItem"
       Resource:
         - "arn:aws:dynamodb:${opt:region}:*:table/${self:provider.environment.USER_RECORD_INTERACTION}"
+        - "arn:aws:dynamodb:${opt:region}:*:table/${self:provider.environment.USER_SALES}"
   environment:
     POWERTOOLS_LOG_LEVEL: "DEBUG"
     POWERTOOLS_SERVICE_NAME: "user-recomendation-service"
@@ -29,6 +30,7 @@ provider:
 
     USER_RECORD_INTERACTION: ${opt:stage}-user-record-interaction
     OPENAI_API_KEY: ${param:openai-api-key}
+    USER_SALES: ${opt:stage}-user-sales
 
 package:
   individually: true
@@ -89,13 +91,50 @@ functions:
           path: /user/product-recomendation
           integration: lambda
           response: ${self:custom.responseGetters}
+  getClients:
+    handler: src/functions/getClients.handler
+    description: Get clients
+    timeout: 30
+    memorySize: 512
+    events:
+      - http:
+          method: GET
+          path: /clients
+          integration: lambda
+          response: ${self:custom.responseGetters}
+  getClient:
+    handler: src/functions/getClient.handler
+    description: Get client by code
+    timeout: 30
+    memorySize: 512
+    events:
+      - http:
+          method: GET
+          path: /clients/{code}
+          integration: lambda
+          response: ${self:custom.responseGetters}
 
 resources:
   Resources:
-    UserRecordInteractionDB:
+    userRecordInteractionTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:provider.environment.USER_RECORD_INTERACTION}
+        AttributeDefinitions:
+          - AttributeName: "PK"
+            AttributeType: "S"
+          - AttributeName: "SK"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "PK"
+            KeyType: "HASH"
+          - AttributeName: "SK"
+            KeyType: "RANGE"
+        BillingMode: PAY_PER_REQUEST
+    userSalesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.USER_SALES}
         AttributeDefinitions:
           - AttributeName: "PK"
             AttributeType: "S"
