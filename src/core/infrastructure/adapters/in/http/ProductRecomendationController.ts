@@ -1,7 +1,7 @@
 import { StructuredOutputParser } from '@langchain/core/output_parsers'
 import { PromptTemplate } from '@langchain/core/prompts'
 import { RunnableSequence } from '@langchain/core/runnables'
-import { OpenAI } from '@langchain/openai'
+import { ChatOpenAI } from '@langchain/openai'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import { Handler } from 'src/core/app/ports/in/http/handler'
 import { logger, responseHandler } from 'src/powertools/utilities'
@@ -397,7 +397,7 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
           'pesobruto': '63'
         }
       ]
-      
+
       const userProductsBuyed = [
         {
           'descategoria': 'TRATAMIENTO FACIAL',
@@ -529,13 +529,16 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
           {products_buyed}
           `
         ),
-        new OpenAI({
-          modelName: 'gpt-3.5-turbo-0125',
+        new ChatOpenAI({
+          modelName: 'gpt-4o-mini',
           openAIApiKey: process.env.OPENAI_API_KEY,
+          temperature: 0.3
         }),
         outputParser,
       ]
       )
+
+      logger.info('product recomendation', { chain } )
 
       const suggestions = await chain.invoke({
         products_buyed: userProductsBuyed
