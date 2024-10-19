@@ -17,20 +17,6 @@ Clone this repository and install dependencies
 
     npm run deploy
 
-## Blogs list
-
-- Implementando una API REST utilizando TypeScript con Serverless Framework y AWS 
-
-    https://medium.com/@kenny.luque.t/71d5c1810db6
-
-- Construyendo un template para tus proyectos de serverless framework y TypeScript
-
-    https://medium.com/@kenny.luque.t/f5d962c41d9c
-
-- Desarrollando Aplicaciones Escalables con Arquitectura Hexagonal, Serverless Framework TypeScript y AWS
-
-    https://medium.com/@kenny.luque.t/c31c8e3cbac6
-
 ## Estrctura del proyecto
 
 ```bash
@@ -62,25 +48,3 @@ Clone this repository and install dependencies
 └── package.json
 
 ```
-
-## Social network business use case
-
-This use case talks about using DynamoDB as a social network. A social network is an online service that lets different users interact with each other. The social network we'll design will let the user see a timeline consisting of their posts, their followers, who they are following, and the posts written by who they are following. The access patterns for this schema design are:
-
-* Get user information for a given userID
-
-* Get follower list for a given userID
-
-* Get following list for a given userID
-
-* Get post list for a given userID
-
-* Get user list who likes the post for a given postID
-
-* Get the like count for a given postID
-
-* Get the timeline for a given userID
-
-## Single table design
-
-![STD](https://docs.aws.amazon.com/images/amazondynamodb/latest/developerguide/images/DataModeling/SocialNetwork8.png)

@@ -9,7 +9,7 @@ import { Handler } from 'src/core/app/ports/in/http/handler'
 import { ProductSuggestionSchema } from 'src/core/app/schemas/PostSchema'
 import { logger, responseHandler } from 'src/powertools/utilities'
 import { z } from 'zod'
-import { products, userProductsBuyed } from '../../../constants/products'
+import { userProductsBuyed } from '../../../constants/products'
 
 export class ProductRecomendationController implements Handler<APIGatewayProxyEvent, Partial<Context>> {
 
@@ -100,7 +100,7 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
         PromptTemplate.fromTemplate(`
           * Actúas como un recomendador de productos avanzado.
           * Solo debes sugerir productos de la siguiente lista (IMPORTANTE: no incluyas productos que no estén en la lista):
-          ${products.map((p) => `\t- ${p.descategoria}-${p.desclase}-${p.desgrupoarticulo}-${p.desunidadnegocio}-${p.desproducto}-${p.desmarca}`).join('\n')}
+          ${existingProducts.map((p) => `\t- ${p.descategoria}-${p.desclase}-${p.desgrupoarticulo}-${p.desunidadnegocio}-${p.desproducto}-${p.desmarca}`).join('\n')}
           * cada elemento tiene la siguiente estructura: categoria-clase-grupoarticulo-unidadnegocio-producto-marca en ese orden 
           * Devuelve una lista con los {suggested_products_count} productos recomendados.
           * No puedes añadir productos que el usuario ya ha completado.
