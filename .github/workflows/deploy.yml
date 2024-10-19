@@ -3,7 +3,7 @@ name: Serverless Framework CI/CD
 on:
   push:
     branches:
-      - main # Deploy on push to the main branch
+      - master # Deploy on push to the main branch
 
 jobs:
   deploy:
@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18" # Use Node.js version suitable for your project
+          node-version: "20.17.0s" # Use Node.js version suitable for your project
 
       - name: Install Serverless Framework
         run: npm install -g serverless
