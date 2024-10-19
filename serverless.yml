@@ -85,6 +85,7 @@ functions:
     handler: src/functions/product-recomendation.handler
     description: Get recomendations of products
     timeout: 30
+    cors: true
     memorySize: 512
     events:
       - http:
@@ -96,6 +97,7 @@ functions:
     handler: src/functions/getClients.handler
     description: Get clients
     timeout: 30
+    cors: true
     memorySize: 512
     events:
       - http:
@@ -107,6 +109,7 @@ functions:
     handler: src/functions/getClient.handler
     description: Get client by code
     timeout: 30
+    cors: true
     memorySize: 512
     events:
       - http:
