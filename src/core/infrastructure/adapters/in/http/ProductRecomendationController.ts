@@ -3,6 +3,7 @@ import { PromptTemplate } from '@langchain/core/prompts'
 import { RunnableSequence } from '@langchain/core/runnables'
 import { ChatOpenAI } from '@langchain/openai'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
+import axios from 'axios'
 import { Handler } from 'src/core/app/ports/in/http/handler'
 import { ProductSuggestionSchema } from 'src/core/app/schemas/PostSchema'
 import { logger, responseHandler } from 'src/powertools/utilities'
@@ -18,389 +19,50 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
       logger.info(`Controller: ${event.body}`)
 
       const eventBody = ProductSuggestionSchema.parse(event.body)
-      const { username, suggestedProductsCount } = eventBody
-
+      const { cod_cliente, des_nombre_cliente, suggestedProductsCount } = eventBody
+      logger.info(cod_cliente ?? '')
+      const username = des_nombre_cliente
       const suggested_products_count = suggestedProductsCount ?? 3
+      
+      // const config: AxiosRequestConfig = {
+      //   method: 'get',
+      //   url: 'https://api-qa.belcorp.biz/oauth/token',
+      //   headers: { 
+      //     'Content-Type': 'application/x-www-form-urlencoded', 
+      //     'Authorization': 'Basic QUtJQVlZSkpTWEdGUlJBT0xGWDU6SGlsdWpjaFJDMGpVdCtVKzlIajhjdElhUW5XUFJabmVnRUVPT1ZtRDBKRT0='
+      //   },
+      //   // data: data
+      // }
+      
+      // const resCredentials = axios(config)
+      //   .then((response) => {
+      //     console.log(response.data)
+      //   })
+      //   .catch((error) => {
+      //     console.error(error)
+      //   })
+      // const userData = await axios.get(`${process.env.BELCORP_MICROSERVICE}/clients/${cod_cliente}`).then(
+      //   res => res.data
+      // )
 
-      const existingProducts = [
-        {
-          'codsap': '200111234',
-          'desproducto': 'ES TAC SUERO MULTIB 28ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'TRATAMIENTO FACIAL',
-          'desgrupoarticulo': 'TRATAMIENTO FACIAL',
-          'desclase': 'TRATAMIENTO FACIAL',
-          'largo': '41',
-          'ancho': '41',
-          'volumen': '182',
-          'pesobruto': '142'
-        },
-        {
-          'codsap': '200098377',
-          'desproducto': 'ES KROMO BLACK PARF 90 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '100',
-          'ancho': '44',
-          'volumen': '449',
-          'pesobruto': '328'
-        },
-        {
-          'codsap': '200107850',
-          'desproducto': 'LB CONCE TO SUERO AH TER 30ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'LBEL',
-          'descategoria': 'TRATAMIENTO FACIAL',
-          'desgrupoarticulo': 'TRATAMIENTO FACIAL',
-          'desclase': 'TRATAMIENTO FACIAL',
-          'largo': '42',
-          'ancho': '42',
-          'volumen': '212',
-          'pesobruto': '130'
-        },
-        {
-          'codsap': '210100407',
-          'desproducto': 'CZ TRAX DES MAKEOUT CC 103G',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'CYZONE',
-          'descategoria': 'CUIDADO PERSONAL',
-          'desgrupoarticulo': 'CUIDADO PERSONAL',
-          'desclase': 'CUIDADO PERSONAL',
-          'largo': '53',
-          'ancho': '53',
-          'volumen': '406',
-          'pesobruto': '207'
-        },
-        {
-          'codsap': '200092025',
-          'desproducto': 'CZ MISEXY PROVO COLONIA 200 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'CYZONE',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '42',
-          'ancho': '42',
-          'volumen': '379',
-          'pesobruto': '217'
-        },
-        {
-          'codsap': '200103394',
-          'desproducto': 'ES PRO FULL BSTR  FR NEGRO',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'MAQUILLAJE',
-          'desgrupoarticulo': 'MAQUILLAJE',
-          'desclase': 'MAQUILLAJE',
-          'largo': '23',
-          'ancho': '23',
-          'volumen': '67',
-          'pesobruto': '35'
-        },
-        {
-          'codsap': '200106357',
-          'desproducto': 'CZ AUTENTIK EDP 45 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'CYZONE',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '55',
-          'ancho': '49',
-          'volumen': '291',
-          'pesobruto': '226'
-        },
-        {
-          'codsap': '200110157',
-          'desproducto': 'ES KROMO FIRE PARF 90 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '100',
-          'ancho': '44',
-          'volumen': '449',
-          'pesobruto': '328'
-        },
-        {
-          'codsap': '200113891',
-          'desproducto': 'ES PULSO EDT EDL 100 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '63',
-          'ancho': '49',
-          'volumen': '509',
-          'pesobruto': '328'
-        },
-        {
-          'codsap': '200106556',
-          'desproducto': 'CZ CYP MASC SECRET LASH 5.8 G',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'CYZONE',
-          'descategoria': 'MAQUILLAJE',
-          'desgrupoarticulo': 'MAQUILLAJE',
-          'desclase': 'MAQUILLAJE',
-          'largo': '13',
-          'ancho': '13',
-          'volumen': '20',
-          'pesobruto': '15'
-        },
-        {
-          'codsap': '200113464',
-          'desproducto': 'CZ ACAI BOMB COL 200 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'CYZONE',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '42',
-          'ancho': '42',
-          'volumen': '379',
-          'pesobruto': '217'
-        },
-        {
-          'codsap': '200106488',
-          'desproducto': 'CZ SKIN F CR OJOS DETOX 15G',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'CYZONE',
-          'descategoria': 'TRATAMIENTO FACIAL',
-          'desgrupoarticulo': 'TRATAMIENTO FACIAL',
-          'desclase': 'TRATAMIENTO FACIAL',
-          'largo': '31',
-          'ancho': '19',
-          'volumen': '78',
-          'pesobruto': '24'
-        },
-        {
-          'codsap': '200104255',
-          'desproducto': 'ES YOU LIVE EDT CC 90 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '62',
-          'ancho': '32',
-          'volumen': '321',
-          'pesobruto': '260'
-        },
-        {
-          'codsap': '200087691',
-          'desproducto': 'ES STAR PROT SOL R&C 80 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'TRATAMIENTO CORPORAL',
-          'desgrupoarticulo': 'TRATAMIENTO CORPORAL',
-          'desclase': 'TRATAMIENTO CORPORAL',
-          'largo': '73',
-          'ancho': '40',
-          'volumen': '345',
-          'pesobruto': '130'
-        },
-        {
-          'codsap': '200114991',
-          'desproducto': 'LB MITHYKA LOC PERF CC 130 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'LBEL',
-          'descategoria': 'TRATAMIENTO CORPORAL',
-          'desgrupoarticulo': 'TRATAMIENTO CORPORAL',
-          'desclase': 'TRATAMIENTO CORPORAL',
-          'largo': '56',
-          'ancho': '42',
-          'volumen': '640',
-          'pesobruto': '152'
-        },
-        {
-          'codsap': '200099047',
-          'desproducto': 'ES KALOS SPORT EDT CC 100ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '74',
-          'ancho': '45',
-          'volumen': '448',
-          'pesobruto': '300'
-        },
-        {
-          'codsap': '200106346',
-          'desproducto': 'ES FIORI PARFUM CC 50ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '39',
-          'ancho': '39',
-          'volumen': '254',
-          'pesobruto': '193'
-        },
-        {
-          'codsap': '200106354',
-          'desproducto': 'LB BLEU GLACIAL PARF 100ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'LBEL',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '89',
-          'ancho': '45',
-          'volumen': '503',
-          'pesobruto': '353'
-        },
-        {
-          'codsap': '200106392',
-          'desproducto': 'ES YOU EDT COL CC 50 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '51',
-          'ancho': '30',
-          'volumen': '194',
-          'pesobruto': '156'
-        },
-        {
-          'codsap': '200102089',
-          'desproducto': 'CZ SL LL LIQ CCG DEEP RED',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'CYZONE',
-          'descategoria': 'MAQUILLAJE',
-          'desgrupoarticulo': 'MAQUILLAJE',
-          'desclase': 'MAQUILLAJE',
-          'largo': '15',
-          'ancho': '15',
-          'volumen': '24',
-          'pesobruto': '16'
-        },
-        {
-          'codsap': '200106440',
-          'desproducto': 'ES CFX 24H PIMIENTA CALIENTE',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'MAQUILLAJE',
-          'desgrupoarticulo': 'MAQUILLAJE',
-          'desclase': 'MAQUILLAJE',
-          'largo': '15',
-          'ancho': '15',
-          'volumen': '24',
-          'pesobruto': '14'
-        },
-        {
-          'codsap': '200110328',
-          'desproducto': 'ES CFX DUO PIMIENTA CALIENTE',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'MAQUILLAJE',
-          'desgrupoarticulo': 'MAQUILLAJE',
-          'desclase': 'MAQUILLAJE',
-          'largo': '16',
-          'ancho': '16',
-          'volumen': '34',
-          'pesobruto': '16'
-        },
-        {
-          'codsap': '200106295',
-          'desproducto': 'ES MIA SENS NG PARF 45 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '63',
-          'ancho': '36',
-          'volumen': '299',
-          'pesobruto': '226'
-        },
-        {
-          'codsap': '210102594',
-          'desproducto': 'CY MINI BOLSO NURELIA',
-          'desunidadnegocio': 'MODA',
-          'desmarca': 'CYZONE',
-          'descategoria': 'COMPLEMENTOS',
-          'desgrupoarticulo': 'COMPLEM. DE VESTIR',
-          'desclase': 'COMPLEM. DE VESTIR',
-          'largo': '200',
-          'ancho': '60',
-          'volumen': '2400',
-          'pesobruto': '250'
-        },
-        {
-          'codsap': '200113892',
-          'desproducto': 'ES YOU REACO EDT CO 50 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '51',
-          'ancho': '30',
-          'volumen': '194',
-          'pesobruto': '156'
-        },
-        {
-          'codsap': '200091530',
-          'desproducto': 'ES D\'ORSAY INFINITE PARF 90ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'ESIKA',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '83',
-          'ancho': '38',
-          'volumen': '426',
-          'pesobruto': '288'
-        },
-        {
-          'codsap': '200101110',
-          'desproducto': 'LB NOCTURNE SERUM CC 30ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'LBEL',
-          'descategoria': 'TRATAMIENTO FACIAL',
-          'desgrupoarticulo': 'TRATAMIENTO FACIAL',
-          'desclase': 'TRATAMIENTO FACIAL',
-          'largo': '46',
-          'ancho': '35',
-          'volumen': '227',
-          'pesobruto': '148'
-        },
-        {
-          'codsap': '200101369',
-          'desproducto': 'LB MITHYKA ELIXIR PARFUM 50 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'LBEL',
-          'descategoria': 'FRAGANCIAS',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'desclase': 'FRAGANCIAS',
-          'largo': '45',
-          'ancho': '42',
-          'volumen': '292',
-          'pesobruto': '226'
-        },
-        {
-          'codsap': '200100855',
-          'desproducto': 'CZ SKIN F BLOQUEADOR 50 ML',
-          'desunidadnegocio': 'COSMETICOS',
-          'desmarca': 'CYZONE',
-          'descategoria': 'TRATAMIENTO FACIAL',
-          'desgrupoarticulo': 'TRATAMIENTO FACIAL',
-          'desclase': 'TRATAMIENTO FACIAL',
-          'largo': '47',
-          'ancho': '30',
-          'volumen': '171',
-          'pesobruto': '63'
-        }
-      ]
+      const allProducts = await axios.get('https://belc-hackathon2023.s3.amazonaws.com/products.json').then(
+        res => res.data
+      )
+      console.log(allProducts)
+
+      const existingProducts = allProducts as {
+        descategoria: string
+        codsap: string,
+        desclase: string,
+        volumen: string,
+        desgrupoarticulo: string,
+        ancho: string,
+        pesobruto: string,
+        desunidadnegocio: string,
+        largo: string,
+        desproducto: string,
+        desmarca: string
+      }[]
 
       const userProductsBuyed = [
         {

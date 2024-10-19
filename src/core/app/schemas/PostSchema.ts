@@ -1,7 +1,8 @@
 import { z } from 'zod'
 
 const ProductSuggestionSchema = z.object({
-  username: z.string(),
+  cod_cliente: z.string().optional(),
+  des_nombre_cliente: z.string().optional(),
   suggestedProductsCount:z.number().optional()
 })
 

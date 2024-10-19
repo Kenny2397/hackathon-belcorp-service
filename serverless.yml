@@ -31,6 +31,7 @@ provider:
     USER_RECORD_INTERACTION: ${opt:stage}-user-record-interaction
     OPENAI_API_KEY: ${param:openai-api-key}
     USER_SALES: ${opt:stage}-user-sales
+    BELCORP_MICROSERVICE: https://9oc6uu1fcl.execute-api.us-west-2.amazonaws.com/dev
 
 package:
   individually: true
