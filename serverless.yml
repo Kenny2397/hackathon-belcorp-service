@@ -93,6 +93,17 @@ functions:
           integration: lambda
           cors: true
           response: ${self:custom.responseGetters}
+  skincare-routine-recommendation:
+    handler: src/functions/skincare-routine-recommendation.handler
+    description: Get personalized skincare routine recommendation
+    timeout: 30
+    memorySize: 512
+    events:
+      - http:
+          method: POST
+          path: /user/skincare-routine-recommendation
+          integration: lambda
+          response: ${self:custom.responseGetters}
   getClients:
     handler: src/functions/getClients.handler
     description: Get clients

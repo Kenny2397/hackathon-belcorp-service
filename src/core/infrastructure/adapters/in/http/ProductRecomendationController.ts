@@ -9,11 +9,11 @@ import { Handler } from 'src/core/app/ports/in/http/handler'
 import { ProductSuggestionSchema } from 'src/core/app/schemas/PostSchema'
 import { logger, responseHandler } from 'src/powertools/utilities'
 import { z } from 'zod'
+import { products, userProductsBuyed } from '../../../constants/products'
+
 export class ProductRecomendationController implements Handler<APIGatewayProxyEvent, Partial<Context>> {
 
-  constructor (
-    
-  ) {}
+  constructor () {}
 
   async exec (event: APIGatewayProxyEvent) {
     try {
@@ -66,132 +66,17 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
         desmarca: string
       }[]
 
-      // const userProductsBuyed = [
-      //   {
-      //     'descategoria': 'TRATAMIENTO FACIAL',
-      //     'codsap': '200111234',
-      //     'desclase': 'TRATAMIENTO FACIAL',
-      //     'volumen': '182',
-      //     'desgrupoarticulo': 'TRATAMIENTO FACIAL',
-      //     'ancho': '41',
-      //     'pesobruto': '142',
-      //     'desunidadnegocio': 'COSMETICOS',
-      //     'largo': '41',
-      //     'desproducto': 'ES TAC SUERO MULTIB 28ML',
-      //     'desmarca': 'ESIKA'
-      //   },
-      //   {
-      //     'descategoria': 'FRAGANCIAS',
-      //     'codsap': '200098377',
-      //     'desclase': 'FRAGANCIAS',
-      //     'volumen': '449',
-      //     'desgrupoarticulo': 'FRAGANCIAS',
-      //     'ancho': '44',
-      //     'pesobruto': '328',
-      //     'desunidadnegocio': 'COSMETICOS',
-      //     'largo': '100',
-      //     'desproducto': 'ES KROMO BLACK PARF 90 ML',
-      //     'desmarca': 'ESIKA'
-      //   },
-      //   {
-      //     'descategoria': 'TRATAMIENTO FACIAL',
-      //     'codsap': '200107850',
-      //     'desclase': 'TRATAMIENTO FACIAL',
-      //     'volumen': '212',
-      //     'desgrupoarticulo': 'TRATAMIENTO FACIAL',
-      //     'ancho': '42',
-      //     'pesobruto': '130',
-      //     'desunidadnegocio': 'COSMETICOS',
-      //     'largo': '42',
-      //     'desproducto': 'LB CONCE TO SUERO AH TER 30ML',
-      //     'desmarca': 'LBEL'
-      //   },
-      //   {
-      //     'descategoria': 'CUIDADO PERSONAL',
-      //     'codsap': '210100407',
-      //     'desclase': 'CUIDADO PERSONAL',
-      //     'volumen': '406',
-      //     'desgrupoarticulo': 'CUIDADO PERSONAL',
-      //     'ancho': '53',
-      //     'pesobruto': '207',
-      //     'desunidadnegocio': 'COSMETICOS',
-      //     'largo': '53',
-      //     'desproducto': 'CZ TRAX DES MAKEOUT CC 103G',
-      //     'desmarca': 'CYZONE'
-      //   },
-      //   {
-      //     'descategoria': 'FRAGANCIAS',
-      //     'codsap': '200092025',
-      //     'desclase': 'FRAGANCIAS',
-      //     'volumen': '379',
-      //     'desgrupoarticulo': 'FRAGANCIAS',
-      //     'ancho': '42',
-      //     'pesobruto': '217',
-      //     'desunidadnegocio': 'COSMETICOS',
-      //     'largo': '42',
-      //     'desproducto': 'CZ MISEXY PROVO COLONIA 200 ML',
-      //     'desmarca': 'CYZONE'
-      //   },
-      //   {
-      //     'descategoria': 'MAQUILLAJE',
-      //     'codsap': '200103394',
-      //     'desclase': 'MAQUILLAJE',
-      //     'volumen': '67',
-      //     'desgrupoarticulo': 'MAQUILLAJE',
-      //     'ancho': '23',
-      //     'pesobruto': '35',
-      //     'desunidadnegocio': 'COSMETICOS',
-      //     'largo': '23',
-      //     'desproducto': 'ES PRO FULL BSTR  FR NEGRO',
-      //     'desmarca': 'ESIKA'
-      //   },
-      //   {
-      //     'descategoria': 'FRAGANCIAS',
-      //     'codsap': '200106357',
-      //     'desclase': 'FRAGANCIAS',
-      //     'volumen': '291',
-      //     'desgrupoarticulo': 'FRAGANCIAS',
-      //     'ancho': '49',
-      //     'pesobruto': '226',
-      //     'desunidadnegocio': 'COSMETICOS',
-      //     'largo': '55',
-      //     'desproducto': 'CZ AUTENTIK EDP 45 ML',
-      //     'desmarca': 'CYZONE'
-      //   }
-      // ]
-      let allProducts2 = [] as {
-        descategoria: string
-        codsap: string,
-        desclase: string,
-        volumen: string,
-        desgrupoarticulo: string,
-        ancho: string,
-        pesobruto: string,
-        desunidadnegocio: string,
-        largo: string,
-        desproducto: string,
-        desmarca: string
-      }[]
+      // const suggestedProducts = []
 
-      userData.map((i: { products: any[] }) => {
-        i.products.map(p => {
-          allProducts2.push(p)
-        })
-      })
+      // const prefix = `Dado unos curso de entrada, sugiere tres productos relevantes de la siguiente lista 
+      //     (IMPORTANTE devuelve sólo los nombres de los productos):
+      //   ${formatProductsExisting(existingProducts)}`
+
       
-      const userProductsBuyed = userData as {
-        descategoria: string
-        codsap: string,
-        desclase: string,
-        volumen: string,
-        desgrupoarticulo: string,
-        ancho: string,
-        pesobruto: string,
-        desunidadnegocio: string,
-        largo: string,
-        desproducto: string,
-        desmarca: string
-      }[]
+      // const examplePrompt = new PromptTemplate({
+      //   inputVariables: ['completed_courses', 'suggested_courses'],
+      //   template: '{completed_courses}\n{suggested_courses}',
+      // })
 
       console.log(username, suggested_products_count, userProductsBuyed)
 
@@ -215,7 +100,7 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
         PromptTemplate.fromTemplate(`
           * Actúas como un recomendador de productos avanzado.
           * Solo debes sugerir productos de la siguiente lista (IMPORTANTE: no incluyas productos que no estén en la lista):
-          ${existingProducts.map((p) => `\t- ${p.descategoria}-${p.desclase}-${p.desgrupoarticulo}-${p.desunidadnegocio}-${p.desproducto}-${p.desmarca}`).join('\n')}
+          ${products.map((p) => `\t- ${p.descategoria}-${p.desclase}-${p.desgrupoarticulo}-${p.desunidadnegocio}-${p.desproducto}-${p.desmarca}`).join('\n')}
           * cada elemento tiene la siguiente estructura: categoria-clase-grupoarticulo-unidadnegocio-producto-marca en ese orden 
           * Devuelve una lista con los {suggested_products_count} productos recomendados.
           * No puedes añadir productos que el usuario ya ha completado.
@@ -235,10 +120,9 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
           temperature: 0.4
         }),
         outputParser,
-      ]
-      )
+      ])
 
-      logger.info('product recomendation', { chain } )
+      logger.info('product recomendation', { chain })
 
       const suggestions = await chain.invoke({
         username,
@@ -279,7 +163,3 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
     }
   }
 }
-
-// const formatProductsExisting = (courses: string[]): string => {
-//   return courses.map((course) => `\t- ${course}`).join('\n')
-// }
