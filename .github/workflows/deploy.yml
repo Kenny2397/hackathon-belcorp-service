@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20" # Use Node.js version suitable for your project
-          node-version: "20" # Use Node.js version suitable for your project
 
       - name: Install Serverless Framework
         run: npm install -g serverless
