@@ -12,6 +12,7 @@ export const handler = async (event: APIGatewayProxyEvent, _context: Partial<Con
   logger.logEventIfEnabled(event)
 
   const res = await productRecomendationController.exec(event)
+  
 
   return res
 }
