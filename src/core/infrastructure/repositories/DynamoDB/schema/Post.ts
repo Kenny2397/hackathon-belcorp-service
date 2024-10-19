@@ -1,8 +1,7 @@
-import { AttributeValue, PutItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb'
+import { AttributeValue, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { config } from '@config/environment'
 import { Post } from '@domain/models/Post'
-import { CreatePostType } from 'src/core/app/schemas/PostSchema'
 import { GenerateError, logger } from 'src/powertools/utilities'
 import { ulid } from 'ulid'
 import { getClient } from './Client'
@@ -46,34 +45,34 @@ export class PostDynamoDB extends Item {
     return response
   }
 
-  static async createPost (postData: CreatePostType) {
-    const client = getClient()
+  // static async createPost (postData: CreatePostType) {
+  //   const client = getClient()
 
-    const post = new PostDynamoDB(postData.username)
+  //   const post = new PostDynamoDB(postData.username)
 
-    const command = new PutItemCommand({
-      TableName: config.socialNetworkTableName,
-      Item: {
-        ...post.keysValue(),
-        id: { S: post.id },
-        title: { S: postData.title },
-        subtitle: { S: postData.subtitle },
-        content: { S: postData.content },
-        imageUrl: { S: postData.imageUrl },
-        createdAt: { S: new Date().toISOString() },
-        updatedAt: { S: new Date().toISOString() }
-      }
-    })
-    try {
-      const response = await client.send(command)
-      logger.debug('createpost command - response', { command, response })
+  //   const command = new PutItemCommand({
+  //     TableName: config.socialNetworkTableName,
+  //     Item: {
+  //       ...post.keysValue(),
+  //       id: { S: post.id },
+  //       title: { S: postData.title },
+  //       subtitle: { S: postData.subtitle },
+  //       content: { S: postData.content },
+  //       imageUrl: { S: postData.imageUrl },
+  //       createdAt: { S: new Date().toISOString() },
+  //       updatedAt: { S: new Date().toISOString() }
+  //     }
+  //   })
+  //   try {
+  //     const response = await client.send(command)
+  //     logger.debug('createpost command - response', { command, response })
 
-      return post.id
-    } catch (error) {
-      logger.error('createpost - error', { error })
-      throw new GenerateError(500, { detail: 'Error creating post' })
-    }
-  }
+  //     return post.id
+  //   } catch (error) {
+  //     logger.error('createpost - error', { error })
+  //     throw new GenerateError(500, { detail: 'Error creating post' })
+  //   }
+  // }
 
   static async getAllPosts (username: string) {
     const client = getClient()

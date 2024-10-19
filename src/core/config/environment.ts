@@ -3,7 +3,7 @@ const {
   SDK_SOCKET_TIMEOUT,
   SDK_CONNECTION_TIMEOUT,
   SOCIAL_NETWORK_TABLE_NAME,
-  USER_SALES,
+  USER_RECORD_INTERACTION,
 } = process.env
 
 export const config = {
@@ -11,5 +11,5 @@ export const config = {
   sdkSocketTimeout: SDK_SOCKET_TIMEOUT,
   sdkConnectionTimeout: SDK_CONNECTION_TIMEOUT,
   socialNetworkTableName: SOCIAL_NETWORK_TABLE_NAME,
-  userSalesTableName: USER_SALES,
+  userRecordInteractionTableName: USER_RECORD_INTERACTION,
 }

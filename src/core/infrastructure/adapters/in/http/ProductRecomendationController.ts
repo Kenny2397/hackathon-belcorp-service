@@ -1,3 +1,4 @@
+import { UserDynamoDB } from '@infrastructure/repositories/DynamoDB/schema/User'
 import { StructuredOutputParser } from '@langchain/core/output_parsers'
 import { PromptTemplate } from '@langchain/core/prompts'
 import { RunnableSequence } from '@langchain/core/runnables'
@@ -20,7 +21,7 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
 
       const eventBody = ProductSuggestionSchema.parse(event.body)
       const { cod_cliente, des_nombre_cliente, suggestedProductsCount } = eventBody
-      logger.info(cod_cliente ?? '')
+      logger.info(cod_cliente ?? 'C66Z5')
       const username = des_nombre_cliente
       const suggested_products_count = suggestedProductsCount ?? 3
       
@@ -41,10 +42,11 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
       //   .catch((error) => {
       //     console.error(error)
       //   })
-      // const userData = await axios.get(`${process.env.BELCORP_MICROSERVICE}/clients/${cod_cliente}`).then(
-      //   res => res.data
-      // )
+      const userData = await axios.get(`${process.env.BELCORP_MICROSERVICE}/clients/${cod_cliente}`).then(
+        res => res.data.body.data[0].sales
+      )
 
+      console.log('userData', userData)
       const allProducts = await axios.get('https://belc-hackathon2023.s3.amazonaws.com/products.json').then(
         res => res.data
       )
@@ -64,112 +66,134 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
         desmarca: string
       }[]
 
-      const userProductsBuyed = [
-        {
-          'descategoria': 'TRATAMIENTO FACIAL',
-          'codsap': '200111234',
-          'desclase': 'TRATAMIENTO FACIAL',
-          'volumen': '182',
-          'desgrupoarticulo': 'TRATAMIENTO FACIAL',
-          'ancho': '41',
-          'pesobruto': '142',
-          'desunidadnegocio': 'COSMETICOS',
-          'largo': '41',
-          'desproducto': 'ES TAC SUERO MULTIB 28ML',
-          'desmarca': 'ESIKA'
-        },
-        {
-          'descategoria': 'FRAGANCIAS',
-          'codsap': '200098377',
-          'desclase': 'FRAGANCIAS',
-          'volumen': '449',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'ancho': '44',
-          'pesobruto': '328',
-          'desunidadnegocio': 'COSMETICOS',
-          'largo': '100',
-          'desproducto': 'ES KROMO BLACK PARF 90 ML',
-          'desmarca': 'ESIKA'
-        },
-        {
-          'descategoria': 'TRATAMIENTO FACIAL',
-          'codsap': '200107850',
-          'desclase': 'TRATAMIENTO FACIAL',
-          'volumen': '212',
-          'desgrupoarticulo': 'TRATAMIENTO FACIAL',
-          'ancho': '42',
-          'pesobruto': '130',
-          'desunidadnegocio': 'COSMETICOS',
-          'largo': '42',
-          'desproducto': 'LB CONCE TO SUERO AH TER 30ML',
-          'desmarca': 'LBEL'
-        },
-        {
-          'descategoria': 'CUIDADO PERSONAL',
-          'codsap': '210100407',
-          'desclase': 'CUIDADO PERSONAL',
-          'volumen': '406',
-          'desgrupoarticulo': 'CUIDADO PERSONAL',
-          'ancho': '53',
-          'pesobruto': '207',
-          'desunidadnegocio': 'COSMETICOS',
-          'largo': '53',
-          'desproducto': 'CZ TRAX DES MAKEOUT CC 103G',
-          'desmarca': 'CYZONE'
-        },
-        {
-          'descategoria': 'FRAGANCIAS',
-          'codsap': '200092025',
-          'desclase': 'FRAGANCIAS',
-          'volumen': '379',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'ancho': '42',
-          'pesobruto': '217',
-          'desunidadnegocio': 'COSMETICOS',
-          'largo': '42',
-          'desproducto': 'CZ MISEXY PROVO COLONIA 200 ML',
-          'desmarca': 'CYZONE'
-        },
-        {
-          'descategoria': 'MAQUILLAJE',
-          'codsap': '200103394',
-          'desclase': 'MAQUILLAJE',
-          'volumen': '67',
-          'desgrupoarticulo': 'MAQUILLAJE',
-          'ancho': '23',
-          'pesobruto': '35',
-          'desunidadnegocio': 'COSMETICOS',
-          'largo': '23',
-          'desproducto': 'ES PRO FULL BSTR  FR NEGRO',
-          'desmarca': 'ESIKA'
-        },
-        {
-          'descategoria': 'FRAGANCIAS',
-          'codsap': '200106357',
-          'desclase': 'FRAGANCIAS',
-          'volumen': '291',
-          'desgrupoarticulo': 'FRAGANCIAS',
-          'ancho': '49',
-          'pesobruto': '226',
-          'desunidadnegocio': 'COSMETICOS',
-          'largo': '55',
-          'desproducto': 'CZ AUTENTIK EDP 45 ML',
-          'desmarca': 'CYZONE'
-        }
-      ]
-      // const suggestedProducts = []
+      // const userProductsBuyed = [
+      //   {
+      //     'descategoria': 'TRATAMIENTO FACIAL',
+      //     'codsap': '200111234',
+      //     'desclase': 'TRATAMIENTO FACIAL',
+      //     'volumen': '182',
+      //     'desgrupoarticulo': 'TRATAMIENTO FACIAL',
+      //     'ancho': '41',
+      //     'pesobruto': '142',
+      //     'desunidadnegocio': 'COSMETICOS',
+      //     'largo': '41',
+      //     'desproducto': 'ES TAC SUERO MULTIB 28ML',
+      //     'desmarca': 'ESIKA'
+      //   },
+      //   {
+      //     'descategoria': 'FRAGANCIAS',
+      //     'codsap': '200098377',
+      //     'desclase': 'FRAGANCIAS',
+      //     'volumen': '449',
+      //     'desgrupoarticulo': 'FRAGANCIAS',
+      //     'ancho': '44',
+      //     'pesobruto': '328',
+      //     'desunidadnegocio': 'COSMETICOS',
+      //     'largo': '100',
+      //     'desproducto': 'ES KROMO BLACK PARF 90 ML',
+      //     'desmarca': 'ESIKA'
+      //   },
+      //   {
+      //     'descategoria': 'TRATAMIENTO FACIAL',
+      //     'codsap': '200107850',
+      //     'desclase': 'TRATAMIENTO FACIAL',
+      //     'volumen': '212',
+      //     'desgrupoarticulo': 'TRATAMIENTO FACIAL',
+      //     'ancho': '42',
+      //     'pesobruto': '130',
+      //     'desunidadnegocio': 'COSMETICOS',
+      //     'largo': '42',
+      //     'desproducto': 'LB CONCE TO SUERO AH TER 30ML',
+      //     'desmarca': 'LBEL'
+      //   },
+      //   {
+      //     'descategoria': 'CUIDADO PERSONAL',
+      //     'codsap': '210100407',
+      //     'desclase': 'CUIDADO PERSONAL',
+      //     'volumen': '406',
+      //     'desgrupoarticulo': 'CUIDADO PERSONAL',
+      //     'ancho': '53',
+      //     'pesobruto': '207',
+      //     'desunidadnegocio': 'COSMETICOS',
+      //     'largo': '53',
+      //     'desproducto': 'CZ TRAX DES MAKEOUT CC 103G',
+      //     'desmarca': 'CYZONE'
+      //   },
+      //   {
+      //     'descategoria': 'FRAGANCIAS',
+      //     'codsap': '200092025',
+      //     'desclase': 'FRAGANCIAS',
+      //     'volumen': '379',
+      //     'desgrupoarticulo': 'FRAGANCIAS',
+      //     'ancho': '42',
+      //     'pesobruto': '217',
+      //     'desunidadnegocio': 'COSMETICOS',
+      //     'largo': '42',
+      //     'desproducto': 'CZ MISEXY PROVO COLONIA 200 ML',
+      //     'desmarca': 'CYZONE'
+      //   },
+      //   {
+      //     'descategoria': 'MAQUILLAJE',
+      //     'codsap': '200103394',
+      //     'desclase': 'MAQUILLAJE',
+      //     'volumen': '67',
+      //     'desgrupoarticulo': 'MAQUILLAJE',
+      //     'ancho': '23',
+      //     'pesobruto': '35',
+      //     'desunidadnegocio': 'COSMETICOS',
+      //     'largo': '23',
+      //     'desproducto': 'ES PRO FULL BSTR  FR NEGRO',
+      //     'desmarca': 'ESIKA'
+      //   },
+      //   {
+      //     'descategoria': 'FRAGANCIAS',
+      //     'codsap': '200106357',
+      //     'desclase': 'FRAGANCIAS',
+      //     'volumen': '291',
+      //     'desgrupoarticulo': 'FRAGANCIAS',
+      //     'ancho': '49',
+      //     'pesobruto': '226',
+      //     'desunidadnegocio': 'COSMETICOS',
+      //     'largo': '55',
+      //     'desproducto': 'CZ AUTENTIK EDP 45 ML',
+      //     'desmarca': 'CYZONE'
+      //   }
+      // ]
+      let allProducts2 = [] as {
+        descategoria: string
+        codsap: string,
+        desclase: string,
+        volumen: string,
+        desgrupoarticulo: string,
+        ancho: string,
+        pesobruto: string,
+        desunidadnegocio: string,
+        largo: string,
+        desproducto: string,
+        desmarca: string
+      }[]
 
-      // const prefix = `Dado unos curso de entrada, sugiere tres productos relevantes de la siguiente lista 
-      //     (IMPORTANTE devuelve sólo los nombres de los productos):
-      //   ${formatProductsExisting(existingProducts)}`
-
+      userData.map((i: { products: any[] }) => {
+        i.products.map(p => {
+          allProducts2.push(p)
+        })
+      })
       
-      // const examplePrompt = new PromptTemplate({
-      //   inputVariables: ['completed_courses', 'suggested_courses'],
-      //   template: '{completed_courses}\n{suggested_courses}',
-      // })
+      const userProductsBuyed = userData as {
+        descategoria: string
+        codsap: string,
+        desclase: string,
+        volumen: string,
+        desgrupoarticulo: string,
+        ancho: string,
+        pesobruto: string,
+        desunidadnegocio: string,
+        largo: string,
+        desproducto: string,
+        desmarca: string
+      }[]
 
-      console.log(username, suggested_products_count)
+      console.log(username, suggested_products_count, userProductsBuyed)
 
       const outputParser = StructuredOutputParser.fromZodSchema(
         z.array(
@@ -220,13 +244,33 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
         username,
         suggested_products_count,
         products_buyed: userProductsBuyed
-          .map((p) => `* ${p.descategoria}-${p.desclase}-${p.desgrupoarticulo}-${p.desunidadnegocio}-${p.desproducto}-${p.desmarca}`)
+          .map((p) => {
+            
+            return `* ${p.descategoria}-${p.desclase}-${p.desgrupoarticulo}-${p.desunidadnegocio}-${p.desproducto}-${p.desmarca}`
+          })
           .join('\n'),
         format_instructions: outputParser.getFormatInstructions(),
       })
 
       console.log(suggestions)
       
+
+      const user = await UserDynamoDB.getUser(cod_cliente!)
+
+      if (!user) {
+        await UserDynamoDB.createUserInfo({
+          cod_cliente: cod_cliente!
+        })
+      }
+      console.log(userProductsBuyed, suggestions)
+      await UserDynamoDB.CreateProductSuggestion({
+        cod_cliente: cod_cliente!,
+        productSuggestions: {
+          productsBuyed: userProductsBuyed,
+          productsSuggested: suggestions
+        }
+      })
+
       return responseHandler(200, {
         data: suggestions
       })
