@@ -1,10 +1,10 @@
+import { AttributeValue, QueryCommand } from '@aws-sdk/client-dynamodb'
+import { unmarshall } from '@aws-sdk/util-dynamodb'
+import { config } from '@config/environment'
+import { getClient } from '@infrastructure/repositories/DynamoDB/schema/Client'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import { Handler } from 'src/core/app/ports/in/http/handler'
 import { logger, responseHandler } from 'src/powertools/utilities'
-import { config } from '@config/environment'
-import { AttributeValue, QueryCommand } from '@aws-sdk/client-dynamodb'
-import { getClient } from '@infrastructure/repositories/DynamoDB/schema/Client'
-import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 
 function fromQuery (items: Record<string, AttributeValue>[]) {
@@ -31,7 +31,7 @@ export class GetClientController implements Handler<APIGatewayProxyEvent, Partia
       logger.info(`Getting client data for code: ${code}`)
       const client = getClient()
       const command = new QueryCommand({
-        TableName: config.userSalesTableName,
+        TableName: config.userRecordInteractionTableName,
         KeyConditionExpression: 'PK = :pk',
         ExpressionAttributeValues: {
           ':pk': { S: code }
