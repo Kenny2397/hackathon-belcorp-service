@@ -1,4 +1,4 @@
-import { ProductRecomendationController } from '@infrastructure/adapters/in/http/GetAllPostController'
+import { ProductRecomendationController } from '@infrastructure/adapters/in/http/ProductRecomendationController'
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda'
 import { logger } from 'src/powertools/utilities'
 
@@ -12,7 +12,7 @@ export const handler = async (event: APIGatewayProxyEvent, _context: Partial<Con
   logger.logEventIfEnabled(event)
 
   const res = await productRecomendationController.exec(event)
-  
+
 
   return res
 }

@@ -3,7 +3,7 @@ import { Tracer } from '@aws-lambda-powertools/tracer'
 
 const logger = new Logger({
   // logLevel: 'DEBUG',
-  serviceName: 'social-network-app'
+  serviceName: 'user-recomendation-service'
 })
 
 // const metrics = new Metrics({
