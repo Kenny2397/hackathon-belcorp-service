@@ -4,6 +4,7 @@ import { RunnableSequence } from '@langchain/core/runnables'
 import { ChatOpenAI } from '@langchain/openai'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import { Handler } from 'src/core/app/ports/in/http/handler'
+import { ProductSuggestionSchema } from 'src/core/app/schemas/PostSchema'
 import { logger, responseHandler } from 'src/powertools/utilities'
 import { z } from 'zod'
 export class ProductRecomendationController implements Handler<APIGatewayProxyEvent, Partial<Context>> {
@@ -14,9 +15,12 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
 
   async exec (event: APIGatewayProxyEvent) {
     try {
-      logger.info(`Controller: ${event}`)
+      logger.info(`Controller: ${event.body}`)
 
-      // const {  } = JSON.parse(event.body as string)
+      const eventBody = ProductSuggestionSchema.parse(event.body)
+      const { username, suggestedProductsCount } = eventBody
+
+      const suggested_products_count = suggestedProductsCount ?? 3
 
       const existingProducts = [
         {
@@ -503,11 +507,19 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
       //   template: '{completed_courses}\n{suggested_courses}',
       // })
 
+      console.log(username, suggested_products_count)
 
       const outputParser = StructuredOutputParser.fromZodSchema(
         z.array(
           z.object({
-            suggestedProduct: z.string().describe('Producto sugerido.'),
+            suggestedProduct: z.object({
+              categoria: z.string().describe('categoria del producto'),
+              clase: z.string().describe('clase del producto'),
+              grupoArticulo: z.string().describe('grupo del producto'),
+              unidadNegocio: z.string().describe('unidad de negocio del producto'),
+              producto: z.string().describe('descripcion del producto'),
+              marca: z.string().describe('marca del producto'),
+            }).describe('Producto sugerido.'),
             reason: z.string().describe('Motivo por qué el producto es sugerido.'),
           }),
         ),
@@ -517,12 +529,14 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
         PromptTemplate.fromTemplate(`
           * Actúas como un recomendador de productos avanzado.
           * Solo debes sugerir productos de la siguiente lista (IMPORTANTE: no incluyas productos que no estén en la lista):
-          ${existingProducts.map((p) => `\t- ${p.descategoria}-${p.desproducto}-${p.desunidadnegocio}-${p.desmarca}`).join('\n')}
-          * Devuelve una lista con los 3 productos recomendados.
+          ${existingProducts.map((p) => `\t- ${p.descategoria}-${p.desclase}-${p.desgrupoarticulo}-${p.desunidadnegocio}-${p.desproducto}-${p.desmarca}`).join('\n')}
+          * cada elemento tiene la siguiente estructura: categoria-clase-grupoarticulo-unidadnegocio-producto-marca en ese orden 
+          * Devuelve una lista con los {suggested_products_count} productos recomendados.
           * No puedes añadir productos que el usuario ya ha completado.
           * Añade también el motivo de la sugerencia (IMPORTANTE: Ha de ser en castellano)
           * Ejemplo de respuesta de la razón de la sugerencia: "Porque haciendo el curso de DDD en PHP has demostrado interés en PHP".
           * Devuelve sólo la lista de productos con sus razones, sin añadir información adicional.
+          * la razon debe ser mas como una recomendacion con un tono cercano, usa emojis para generar confianza y personalizar la respuesta al usuario {username} mencionando su nombre 
           * Siempre respondes utilizando el siguiente JSON Schema:
           {format_instructions}
           * Los productos comprados por el usuario son:
@@ -532,7 +546,7 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
         new ChatOpenAI({
           modelName: 'gpt-4o-mini',
           openAIApiKey: process.env.OPENAI_API_KEY,
-          temperature: 0.3
+          temperature: 0.4
         }),
         outputParser,
       ]
@@ -541,8 +555,10 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
       logger.info('product recomendation', { chain } )
 
       const suggestions = await chain.invoke({
+        username,
+        suggested_products_count,
         products_buyed: userProductsBuyed
-          .map((p) => `* ${p.descategoria}-${p.desproducto}-${p.desunidadnegocio}-${p.desmarca}`)
+          .map((p) => `* ${p.descategoria}-${p.desclase}-${p.desgrupoarticulo}-${p.desunidadnegocio}-${p.desproducto}-${p.desmarca}`)
           .join('\n'),
         format_instructions: outputParser.getFormatInstructions(),
       })

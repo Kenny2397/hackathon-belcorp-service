@@ -1,14 +1,11 @@
 import { z } from 'zod'
 
-const CreatePostSchema = z.object({
+const ProductSuggestionSchema = z.object({
   username: z.string(),
-  title: z.string(),
-  subtitle: z.string(),
-  content: z.string(),
-  imageUrl: z.string(),
+  suggestedProductsCount:z.number().optional()
 })
 
-type CreatePostType = z.infer<typeof CreatePostSchema>
+type ProductSuggestionType = z.infer<typeof ProductSuggestionSchema>
 
-export { CreatePostSchema, type CreatePostType }
+export { ProductSuggestionSchema, type ProductSuggestionType }
 
