@@ -14,6 +14,14 @@ export class GetAllPostController implements Handler<APIGatewayProxyEvent, Parti
       const username = (event.path as unknown as { username: string }).username
       logger.info(`Getting a list of post for username: ${username}`)
       const response = await this.getAllPostUsecase.GetAllPostList(username)
+
+
+
+
+
+
+
+      
       
       return responseHandler(200, {
         data: response

@@ -1,6 +1,6 @@
-service: social-network-app
+service: user-recomendation-service
 
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 provider:
   name: aws
@@ -22,12 +22,12 @@ provider:
         - "arn:aws:dynamodb:${opt:region}:*:table/${self:provider.environment.SOCIAL_NETWORK_TABLE_NAME}"
   environment:
     POWERTOOLS_LOG_LEVEL: "DEBUG"
-    POWERTOOLS_SERVICE_NAME: "social-network-app"
+    POWERTOOLS_SERVICE_NAME: "user-recomendation-service"
     # POWERTOOLS_DEV: 1
-    POWERTOOLS_LOGGER_LOG_EVENT: "true"  #context
+    POWERTOOLS_LOGGER_LOG_EVENT: "true" #context
     # POWERTOOLS_TRACE_ENABLED: "false"
 
-    SOCIAL_NETWORK_TABLE_NAME: ${opt:stage}-social-network
+    USER_RECORD_INTERACTION: ${opt:stage}-user-record-interaction
 
 package:
   individually: true
@@ -77,77 +77,11 @@ plugins:
   - serverless-offline
 
 functions:
-  # createUser:
-  #   handler: src/functions/createUser.handler
-  #   description: Create a new user
-  #   timeout: 30
-  #   memorySize: 512
-  #   events:
-  #     - http:
-  #         method: POST
-  #         path: /user
-  #         integration: lambda
-  #         response: ${self:custom.responseGetters}
-  # getUserData: 
-  #   handler: src/functions/getUserData.handler
-  #   description: Get user information for a given username
-  #   timeout: 30
-  #   memorySize: 512
-  #   events:
-  #     - http:
-  #         method: GET
-  #         path: /user/{username}
-  #         integration: lambda
-  #         response: ${self:custom.responseGetters}
-  # setFollower:
-  #   handler: src/functions/setFollower.handler
-  #   description: Create a new follower
-  #   timeout: 30
-  #   memorySize: 512
-  #   events:
-  #     - http:
-  #         method: POST
-  #         path: /follower
-  #         integration: lambda
-  #         response: ${self:custom.responseGetters}
-  # getFollower: 
-  #   handler: src/functions/getFollower.handler
-  #   description: Get user information for a given username
-  #   timeout: 30
-  #   memorySize: 512    
-  #   events:
-  #     - http:
-  #         method: GET
-  #         path: /user/follower/{username}
-  #         integration: lambda
-  #         response: ${self:custom.responseGetters}
-  # getFollowing: 
-  #   handler: src/functions/getFollowing.handler
-  #   description: Get user following by username
-  #   timeout: 30
-  #   memorySize: 512    
-  #   events:
-  #     - http:
-  #         method: GET
-  #         path: /user/following/{username}
-  #         integration: lambda
-  #         response: ${self:custom.responseGetters}
-  # createPost:
-  #   handler: src/functions/createPost.handler
-  #   description: Create a new post of user
-  #   timeout: 30
-  #   memorySize: 512
-  #   events:
-  #     - http:
-  #         method: POST
-  #         path: /post
-  #         integration: lambda
-  #         response: ${self:custom.responseGetters}
-  getAllPostOfUser: 
+  getAllPostOfUser:
     handler: src/functions/getAllPostOfUser.handler
     description: Get all post of user
     timeout: 30
-    memorySize: 512    
+    memorySize: 512
     events:
       - http:
           method: GET
@@ -160,7 +94,7 @@ resources:
     socialNetworkDB:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:provider.environment.SOCIAL_NETWORK_TABLE_NAME}
+        TableName: ${self:provider.environment.USER_RECORD_INTERACTION}
         AttributeDefinitions:
           - AttributeName: "PK"
             AttributeType: "S"
