@@ -3,7 +3,7 @@ import { Tracer } from '@aws-lambda-powertools/tracer'
 
 const logger = new Logger({
   // logLevel: 'DEBUG',
-  serviceName: 'social-network-app'
+  serviceName: 'user-recomendation-service'
 })
 
 // const metrics = new Metrics({
@@ -19,7 +19,7 @@ export class GenerateError extends Error {
   name: 'Error'
   public statusCode: number
   public body: Record<string, any> | string
-  
+
   constructor (statusCode: number, body: object) {
     super()
     this.statusCode = statusCode
@@ -28,7 +28,7 @@ export class GenerateError extends Error {
 }
 
 export const responseHandler = (statusCode: number, body?: any, error?: any) => {
-  
+
 
   const listStatus: Record<number, string> = {
     200: 'OK',

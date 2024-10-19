@@ -6,8 +6,8 @@
     "dev": "serverless offline start --stage dev --region us-west-2",
     "pkg": "serverless package --stage dev --region us-west-2",
     "deploy": "serverless deploy --stage pr --region us-west-2 --param=openai-api-key=",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
+    "lint": "eslint --ext .ts",
+    "lint:fix": "eslint --ext .ts --fix",
     "test": "jest --ci --detectOpenHandles --config=jest.config.json --passWithNoTests",
     "test:dev": "npm run lint --fix && npx jest --detectOpenHandles --config=jest.config.json --watch",
     "prepare": "husky"

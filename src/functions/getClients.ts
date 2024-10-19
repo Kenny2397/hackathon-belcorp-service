@@ -5,11 +5,11 @@ import { logger } from 'src/powertools/utilities'
 const getClientsController = new GetClientsController()
 
 export const handler = async (event: APIGatewayProxyEvent, _context: Partial<Context>)
-    : Promise<APIGatewayProxyResult | unknown> => {
+: Promise<APIGatewayProxyResult | unknown> => {
 
-    logger.logEventIfEnabled(event)
+  logger.logEventIfEnabled(event)
 
-    const res = await getClientsController.exec(event)
+  const res = await getClientsController.exec(event)
 
-    return res
+  return res
 }
