@@ -91,6 +91,7 @@ functions:
           method: POST
           path: /user/product-recomendation
           integration: lambda
+          cors: true
           response: ${self:custom.responseGetters}
   getClients:
     handler: src/functions/getClients.handler
@@ -102,6 +103,7 @@ functions:
           method: GET
           path: /clients
           integration: lambda
+          cors: true
           response: ${self:custom.responseGetters}
   getClient:
     handler: src/functions/getClient.handler
@@ -113,6 +115,7 @@ functions:
           method: GET
           path: /clients/{code}
           integration: lambda
+          cors: true
           response: ${self:custom.responseGetters}
 
 resources:
