@@ -517,7 +517,7 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
         PromptTemplate.fromTemplate(`
           * Actúas como un recomendador de productos avanzado.
           * Solo debes sugerir productos de la siguiente lista (IMPORTANTE: no incluyas productos que no estén en la lista):
-          ${existingProducts.map((p) => `\t- ${p}`).join('\n')}
+          ${existingProducts.map((p) => `\t- ${p.descategoria}-${p.desproducto}-${p.desunidadnegocio}-${p.desmarca}`).join('\n')}
           * Devuelve una lista con los 3 productos recomendados.
           * No puedes añadir productos que el usuario ya ha completado.
           * Añade también el motivo de la sugerencia (IMPORTANTE: Ha de ser en castellano)
@@ -542,7 +542,7 @@ export class ProductRecomendationController implements Handler<APIGatewayProxyEv
 
       const suggestions = await chain.invoke({
         products_buyed: userProductsBuyed
-          .map((course) => `* ${course}`)
+          .map((p) => `* ${p.descategoria}-${p.desproducto}-${p.desunidadnegocio}-${p.desmarca}`)
           .join('\n'),
         format_instructions: outputParser.getFormatInstructions(),
       })
