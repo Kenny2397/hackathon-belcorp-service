@@ -1,16 +1,6 @@
 
 # Social Network app
 
-Backend social network application using serverless framework ,typescript, AWS, SDKv3, DynamoDB Single table design, Hexagonal Arquitecture, Best practices.
-
-
-## 🔗 Links
-
-[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/kennyluquet/)
-
-[Kenny Luque](https://kennyluque.vercel.app/)
-
-
 ## Usage
 
 Clone this repository and install dependencies
