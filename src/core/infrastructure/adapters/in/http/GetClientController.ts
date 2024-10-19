@@ -31,7 +31,7 @@ export class GetClientController implements Handler<APIGatewayProxyEvent, Partia
       logger.info(`Getting client data for code: ${code}`)
       const client = getClient()
       const command = new QueryCommand({
-        TableName: config.userRecordInteractionTableName,
+        TableName: config.userSalesTableName,
         KeyConditionExpression: 'PK = :pk',
         ExpressionAttributeValues: {
           ':pk': { S: code }
